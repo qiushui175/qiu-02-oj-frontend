@@ -1,20 +1,34 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import BasePage from "@/views/BasePage.vue";
+
+// 扩展 RouteMeta 接口以包含我们的自定义属性
+declare module 'vue-router' {
+  interface RouteMeta {
+    isMenu?: boolean; // 标记是否为菜单项
+    title?: string; // 菜单项显示的标题
+  }
+}
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "home",
     component: HomeView,
+    meta: {
+      isMenu: true,
+      title: '主页',
+    },
   },
+
   {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+    path: "/base",
+    name: "base",
+    component: BasePage,
+    meta: {
+      isMenu: true,
+      title: '测试页',
+    },
   },
 ];
 
