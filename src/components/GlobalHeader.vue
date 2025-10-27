@@ -1,47 +1,49 @@
 <template>
   <div id="global-header">
-
-
-    <a-row class="global-header-grid" style="margin-bottom: 16px;" align="center" :warp="false">
-    <a-col flex="auto">
-      <a-menu
-      mode="horizontal"
-      :default-selected-keys="['1']"
-      :selected-keys="selectedKeys"
+    <a-row
+      class="global-header-grid"
+      style="margin-bottom: 16px"
+      align="center"
+      :warp="false"
     >
-      <!-- logo和名称 -->
-      <a-menu-item
-        key="0"
-        :style="{ padding: 0, marginRight: '38px' }"
-        disabled
-      >
-        <div class="title-bar">
-          <img class="logo" src="../assets/qiu-logo.png" />
-          <div class="title">秋水OJ</div>
-        </div>
-      </a-menu-item>
+      <a-col flex="auto">
+        <a-menu
+          mode="horizontal"
+          :default-selected-keys="['1']"
+          :selected-keys="selectedKeys"
+        >
+          <!-- logo和名称 -->
+          <a-menu-item
+            key="0"
+            :style="{ padding: 0, marginRight: '38px' }"
+            disabled
+          >
+            <div class="title-bar">
+              <img class="logo" src="../assets/qiu-logo.png" />
+              <div class="title">秋水OJ</div>
+            </div>
+          </a-menu-item>
 
-      <!-- 菜单栏 -->
-      <a-menu-item
-        v-for="routeItem in menuRoutes"
-        :key="routeItem.path"
-        @click="handleMenuClick(routeItem.path)"
-      >
-        {{ routeItem.meta?.title || routeItem.name }}
-      </a-menu-item>
-    </a-menu>
-    </a-col>
-    <a-col flex="100px">
-      <div>{{ store.state.user?.loginUser?.userName ?? "未登录" }}</div>
-    </a-col>
-  </a-row>
-
-
-    
+          <!-- 菜单栏 -->
+          <a-menu-item
+            v-for="routeItem in menuRoutes"
+            :key="routeItem.path"
+            @click="handleMenuClick(routeItem.path)"
+          >
+            {{ routeItem.meta?.title || routeItem.name }}
+          </a-menu-item>
+        </a-menu>
+      </a-col>
+      <a-col flex="100px">
+        <div>{{ store.state.user?.loginUser?.userName ?? '未登录' }}</div>
+      </a-col>
+    </a-row>
   </div>
 </template>
 
 <script setup lang="ts">
+import ACCESS_ENUM from '@/access/accessEnum'
+import checkAccess from '@/access/checkAccess'
 import router from '@/router'
 import { computed, onMounted, ref, watch } from 'vue'
 import { RouteLocationRaw, useRoute, useRouter } from 'vue-router'
@@ -53,6 +55,7 @@ interface MenuItem {
   meta?: {
     isMenu?: boolean
     title?: string
+    access?: string
   }
   // 简化后的类型，实际可能包含更多字段
 }
@@ -61,14 +64,17 @@ const vueRouter = useRouter()
 const vueRoute = useRoute()
 
 const store = useStore()
+const loginUser = computed(() => store.state.user?.loginUser)
 
 // 1. 从路由文件中动态读取菜单项
 // 过滤出所有 meta 中 isMenu: true 的路由
 const menuRoutes = computed<MenuItem[]>(() => {
   // 访问路由实例的 options.routes 来获取完整的路由配置
   // 在 Vue 3/Vue Router 4 中，直接使用 router.options.routes 即可
+  const user = loginUser.value
   return (router.options.routes as unknown as MenuItem[]).filter(
-    (route: MenuItem) => route.meta?.isMenu
+    (route: MenuItem) =>
+      route.meta?.isMenu && checkAccess(user, route.meta?.access)
   )
 })
 
@@ -105,6 +111,9 @@ watch(
     updateSelectedKeys(newPath)
   }
 )
+watch(menuRoutes, () => {
+  updateSelectedKeys(vueRoute.path)
+})
 
 // 2. 点击对应菜单跳转
 const handleMenuClick = (key: string) => {
@@ -116,6 +125,14 @@ const handleMenuClick = (key: string) => {
     vueRouter.push(path as RouteLocationRaw)
   }
 }
+
+// 登录测试代码 请注释
+setTimeout(() => {
+  store.dispatch("user/getLoginUser", {
+    userName: "qiushui",
+    userRole: ACCESS_ENUM.ADMIN
+  })
+}, 3000);
 </script>
 
 <style scoped>

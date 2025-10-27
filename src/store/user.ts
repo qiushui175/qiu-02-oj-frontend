@@ -11,7 +11,7 @@ export default {
   actions: {
     getLoginUser({ commit, state }, payload) {
       // TODO 从远程去获取登录信息
-      commit("updateUser", { userName: "鱼皮" });
+      commit("updateUser", payload);
     },
   },
   mutations: {
