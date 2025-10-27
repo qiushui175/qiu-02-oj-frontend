@@ -7,6 +7,7 @@ declare module 'vue-router' {
   interface RouteMeta {
     isMenu?: boolean; // 标记是否为菜单项
     title?: string; // 菜单项显示的标题
+    access?: string; // 用户权限校验项
   }
 }
 
