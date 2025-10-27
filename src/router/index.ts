@@ -3,6 +3,9 @@ import HomeView from "../views/HomeView.vue";
 import BasePage from "@/views/BasePage.vue";
 import AdminView from "@/views/AdminView.vue";
 import ACCESS_ENUM from "@/access/accessEnum";
+import UserLayout from "@/layouts/UserLayout.vue";
+import UserLoginView from "@/views/user/UserLoginView.vue";
+import UserRegisterView from "@/views/user/UserRegisterView.vue";
 
 // 扩展 RouteMeta 接口以包含我们的自定义属性
 declare module 'vue-router' {
@@ -14,6 +17,25 @@ declare module 'vue-router' {
 }
 
 const routes: Array<RouteRecordRaw> = [
+
+  {
+    path: "/user",
+    name: "用户",
+    component: UserLayout,
+    children: [
+      {
+        path: "/user/login",
+        name: "用户登录",
+        component: UserLoginView,
+      },
+      {
+        path: "/user/register",
+        name: "用户注册",
+        component: UserRegisterView,
+      },
+    ],
+  },
+
   {
     path: "/",
     name: "home",

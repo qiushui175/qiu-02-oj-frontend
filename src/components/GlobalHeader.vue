@@ -34,6 +34,9 @@
           </a-menu-item>
         </a-menu>
       </a-col>
+      <a-col flex="120px" v-if="!isLogin">
+        <a-button type="primary" @click="handleLoginOrRegister">登录/注册</a-button>
+      </a-col>
       <a-col flex="100px">
         <div>{{ store.state.user?.loginUser?.userName ?? '未登录' }}</div>
       </a-col>
@@ -42,7 +45,6 @@
 </template>
 
 <script setup lang="ts">
-import ACCESS_ENUM from '@/access/accessEnum'
 import checkAccess from '@/access/checkAccess'
 import router from '@/router'
 import { computed, onMounted, ref, watch } from 'vue'
@@ -65,6 +67,7 @@ const vueRoute = useRoute()
 
 const store = useStore()
 const loginUser = computed(() => store.state.user?.loginUser)
+const isLogin = computed(() => store.getters["user/isLogin"]);
 
 // 1. 从路由文件中动态读取菜单项
 // 过滤出所有 meta 中 isMenu: true 的路由
@@ -133,6 +136,11 @@ const handleMenuClick = (key: string) => {
 //     userRole: ACCESS_ENUM.ADMIN
 //   })
 // }, 3000);
+
+
+const handleLoginOrRegister = () =>{
+  vueRouter.push("/user/login")
+}
 </script>
 
 <style scoped>

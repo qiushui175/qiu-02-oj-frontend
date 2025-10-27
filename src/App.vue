@@ -1,6 +1,11 @@
 <template>
   <div id="app">
-    <BasicLayout></BasicLayout>
+    <template v-if="route.path.startsWith('/user')">
+      <router-view />
+    </template>
+    <template v-else>
+      <BasicLayout />
+    </template>
   </div>
 </template>
 
@@ -8,6 +13,9 @@
 import BasicLayout from './layouts/BasicLayout.vue'
 import { onMounted } from 'vue'
 import '@/access'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 // 预留全局初始化代码块
 const doInit = () => {
