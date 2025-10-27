@@ -16,6 +16,7 @@ import GlobalHeader from '@/components/GlobalHeader.vue';
 <style scoped>
 #basic-layout .header {
   margin-bottom: 16px;
+  box-shadow: #eee 1px 1px 5px;
 }
 
 #basic-layout .content {

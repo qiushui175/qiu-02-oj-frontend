@@ -1,6 +1,10 @@
 <template>
   <div id="global-header">
-    <a-menu
+
+
+    <a-row class="global-header-grid" style="margin-bottom: 16px;" align="center">
+    <a-col flex="auto">
+      <a-menu
       mode="horizontal"
       :default-selected-keys="['1']"
       :selected-keys="selectedKeys"
@@ -26,6 +30,14 @@
         {{ routeItem.meta?.title || routeItem.name }}
       </a-menu-item>
     </a-menu>
+    </a-col>
+    <a-col flex="100px">
+      <div>{{ store.state.user?.loginUser?.userName ?? "未登录" }}</div>
+    </a-col>
+  </a-row>
+
+
+    
   </div>
 </template>
 
@@ -33,6 +45,7 @@
 import router from '@/router'
 import { computed, onMounted, ref, watch } from 'vue'
 import { RouteLocationRaw, useRoute, useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
 interface MenuItem {
   path: string
@@ -46,6 +59,8 @@ interface MenuItem {
 
 const vueRouter = useRouter()
 const vueRoute = useRoute()
+
+const store = useStore()
 
 // 1. 从路由文件中动态读取菜单项
 // 过滤出所有 meta 中 isMenu: true 的路由
