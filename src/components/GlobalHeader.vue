@@ -127,12 +127,12 @@ const handleMenuClick = (key: string) => {
 }
 
 // 登录测试代码 请注释
-setTimeout(() => {
-  store.dispatch("user/getLoginUser", {
-    userName: "qiushui",
-    userRole: ACCESS_ENUM.ADMIN
-  })
-}, 3000);
+// setTimeout(() => {
+//   store.dispatch("user/getLoginUser", {
+//     userName: "qiushui",
+//     userRole: ACCESS_ENUM.ADMIN
+//   })
+// }, 3000);
 </script>
 
 <style scoped>
