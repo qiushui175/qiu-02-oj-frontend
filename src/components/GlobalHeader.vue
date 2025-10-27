@@ -2,7 +2,7 @@
   <div id="global-header">
 
 
-    <a-row class="global-header-grid" style="margin-bottom: 16px;" align="center">
+    <a-row class="global-header-grid" style="margin-bottom: 16px;" align="center" :warp="false">
     <a-col flex="auto">
       <a-menu
       mode="horizontal"
