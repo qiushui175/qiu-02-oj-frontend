@@ -6,6 +6,7 @@ import ACCESS_ENUM from "@/access/accessEnum";
 import UserLayout from "@/layouts/UserLayout.vue";
 import UserLoginView from "@/views/user/UserLoginView.vue";
 import UserRegisterView from "@/views/user/UserRegisterView.vue";
+import AddQuestionView from "@/views/question/AddQuestionView.vue";
 
 // 扩展 RouteMeta 接口以包含我们的自定义属性
 declare module 'vue-router' {
@@ -63,6 +64,17 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       isMenu: true,
       title: '管理员页面',
+      access: ACCESS_ENUM.ADMIN
+    },
+  },
+
+  {
+    path: "/question/add",
+    name: "addQuestion",
+    component: AddQuestionView,
+    meta: {
+      isMenu: true,
+      title: '题目添加页面',
       access: ACCESS_ENUM.ADMIN
     },
   },
