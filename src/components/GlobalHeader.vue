@@ -35,10 +35,40 @@
         </a-menu>
       </a-col>
       <a-col flex="120px" v-if="!isLogin">
-        <a-button type="primary" @click="handleLoginOrRegister">登录/注册</a-button>
+        <a-button type="primary" @click="handleLoginOrRegister"
+          >登录/注册</a-button
+        >
       </a-col>
-      <a-col flex="100px">
+      <!-- <a-col flex="100px">
         <div>{{ store.state.user?.loginUser?.userName ?? '未登录' }}</div>
+      </a-col> -->
+
+      <!-- 用户名区域：替换原有div为下拉菜单 -->
+      <a-col flex="120px" style="text-align: left">
+        <!-- 已登录：显示用户名 + 下拉菜单 -->
+        <a-dropdown
+          v-if="isLogin"
+          trigger="hover"
+          placement="bottomRight"
+          @select="handleDropdownSelect"
+        >
+          <!-- 触发元素：用户名（必须用 a-dropdown-item 或直接嵌套元素） -->
+          <span class="username-trigger" style="cursor: pointer">
+            {{ store.state.user?.loginUser?.userName }}
+          </span>
+
+          <!-- 下拉菜单内容 -->
+          <template #content>
+            <a-menu>
+              <a-menu-item @click="handleDropdownSelect('logout')"
+                >退出登录</a-menu-item
+              >
+            </a-menu>
+          </template>
+        </a-dropdown>
+
+        <!-- 未登录：显示默认文本 -->
+        <span v-else>未登录</span>
       </a-col>
     </a-row>
   </div>
@@ -47,6 +77,7 @@
 <script setup lang="ts">
 import checkAccess from '@/access/checkAccess'
 import router from '@/router'
+import { Message } from '@arco-design/web-vue'
 import { computed, onMounted, ref, watch } from 'vue'
 import { RouteLocationRaw, useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
@@ -67,7 +98,7 @@ const vueRoute = useRoute()
 
 const store = useStore()
 const loginUser = computed(() => store.state.user?.loginUser)
-const isLogin = computed(() => store.getters["user/isLogin"]);
+const isLogin = computed(() => store.getters['user/isLogin'])
 
 // 1. 从路由文件中动态读取菜单项
 // 过滤出所有 meta 中 isMenu: true 的路由
@@ -137,9 +168,35 @@ const handleMenuClick = (key: string) => {
 //   })
 // }, 3000);
 
+const handleLoginOrRegister = () => {
+  vueRouter.push('/user/login')
+}
+// 其他已有代码不变，添加下拉菜单选择事件
+const handleDropdownSelect = (key: string) => {
+  if (key === 'logout') {
+    console.log('logout')
+    handleLogout() // 调用退出登录逻辑
+  }
+}
 
-const handleLoginOrRegister = () =>{
-  vueRouter.push("/user/login")
+// 退出登录逻辑（完善版）
+const handleLogout = async () => {
+  try {
+    // 1. 调用后端退出接口（如有）
+    // await UserControllerService.logout();
+
+    // 2. 重置用户状态
+    store.commit('user/resetUser')
+
+    // 3. 清除Token（如有）
+    localStorage.removeItem('token')
+
+    // 4. 提示并跳转
+    Message.success('退出登录成功')
+    vueRouter.push('/user/login')
+  } catch (error) {
+    Message.error('退出失败，请重试')
+  }
 }
 </script>
 

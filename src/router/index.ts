@@ -9,6 +9,7 @@ import UserRegisterView from "@/views/user/UserRegisterView.vue";
 import AddQuestionView from "@/views/question/AddQuestionView.vue";
 import ManageQuestionView from "@/views/question/ManageQuestionView.vue";
 import EditQuestionView from "@/views/question/EditQuestionView.vue";
+import ListQuestionView from "@/views/question/ListQuestionView.vue";
 
 // 扩展 RouteMeta 接口以包含我们的自定义属性
 declare module 'vue-router' {
@@ -42,20 +43,11 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "home",
-    component: HomeView,
+    // component: HomeView,
+    component: ListQuestionView,
     meta: {
       isMenu: true,
       title: '主页',
-    },
-  },
-
-  {
-    path: "/base",
-    name: "base",
-    component: BasePage,
-    meta: {
-      isMenu: true,
-      title: '测试页',
     },
   },
 

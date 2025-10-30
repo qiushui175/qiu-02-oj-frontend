@@ -4,8 +4,16 @@ import checkAccess from './checkAccess'
 import ACCESS_ENUM from './accessEnum'
 
 // 全局路由守卫
-router.beforeEach((to, from, next) => {
-  const loginUser = store.state.user?.loginUser
+router.beforeEach(async (to, from, next) => {
+  let loginUser = store.state.user?.loginUser
+
+  if (!loginUser || !loginUser.userRole) {
+    console.log("auto login")
+    await store.dispatch("user/getLoginUser");
+    loginUser = store.state.user?.loginUser
+  }
+  console.log(store.state.user)
+
   if (!to.meta.access || checkAccess(loginUser, to.meta.access)) {
     // 不需要权限，或者权限校验通过
     next()

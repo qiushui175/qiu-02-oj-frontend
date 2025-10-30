@@ -80,7 +80,7 @@ const handleSubmit = async () => {
     const res = await UserControllerService.userLoginUsingPost(form);
     if (res.code === 0) {
       const data = res.data as UserVO;
-      await store.dispatch("user/getLoginUser", data);
+      store.commit("user/updateUser", data); 
       router.push({ path: "/", replace: true });
     } else {
       message.error("登录失败：" + res.message);

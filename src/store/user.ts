@@ -1,4 +1,5 @@
 // initial state
+import { UserControllerService } from "@/api";
 import { StoreOptions } from "vuex";
 
 export default {
@@ -20,9 +21,15 @@ export default {
     },
   },
   actions: {
-    getLoginUser({ commit, state }, payload) {
+    async getLoginUser({ commit }) {
       // TODO 从远程去获取登录信息
-      commit("updateUser", payload);
+      const res = await UserControllerService.getLoginUserUsingGet(); 
+      if (res.code === 0 && res.data) {
+        commit("updateUser", res.data); // 接口成功且有数据，更新用户状态
+      } else {
+        // 接口返回失败（如未登录），重置为未登录状态
+        commit("resetUser");
+      }
     },
   },
   mutations: {
