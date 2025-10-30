@@ -193,7 +193,7 @@ const handleLogout = async () => {
 
     // 4. 提示并跳转
     Message.success('退出登录成功')
-    vueRouter.push('/user/login')
+    vueRouter.push('/')
   } catch (error) {
     Message.error('退出失败，请重试')
   }
