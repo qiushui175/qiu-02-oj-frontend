@@ -1,6 +1,7 @@
 import store from '@/store' // 确保 store 是导出的对象，而不是 useStore()
 import router from '@/router'
 import checkAccess from './checkAccess'
+import ACCESS_ENUM from './accessEnum'
 
 // 全局路由守卫
 router.beforeEach((to, from, next) => {
@@ -10,7 +11,7 @@ router.beforeEach((to, from, next) => {
     next()
   } else {
     // 需要权限
-    if(!loginUser || !loginUser.userRole){
+    if(!loginUser || !loginUser.userRole || loginUser.userRole === ACCESS_ENUM.NOT_LOGIN){
       // 未登录状态，转到登录页
       next(`/user/login?redirect=${to.fullPath}`)
       return
