@@ -17,7 +17,8 @@
         :bordered="true"
         :scroll="{ x: 1600 }"
         class="question-table"
-      >
+        @page-change="onPageChange"
+        >
         <template #tags="{ record }">
           <a-space size="small" wrap>
             <template v-for="tag in JSON.parse(record.tags || '[]')" :key="tag">
@@ -118,7 +119,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch, watchEffect } from 'vue'
 import { Question, QuestionControllerService } from '@/api'
 import { Message } from '@arco-design/web-vue'
 import { useRouter } from 'vue-router'
@@ -136,22 +137,15 @@ const dataList = ref<Question[]>([])
 const total = ref(0)
 const searchParams = ref({
   pageSize: 10,
-  pageNum: 1
+  current: 1
 })
 
 // 分页配置单独提取
 const paginationConfig = ref({
   pageSize: searchParams.value.pageSize,
-  current: searchParams.value.pageNum,
+  current: searchParams.value.current,
   total: total.value,
   showTotal: true,
-  showQuickJumper: true,
-  pageSizeOptions: [10, 20, 50, 100],
-  onChange: (page: number, pageSize: number) => {
-    searchParams.value.pageNum = page
-    searchParams.value.pageSize = pageSize
-    loadData()
-  }
 })
 
 const loadData = async () => {
@@ -266,6 +260,25 @@ function showAllCases(record: any) {
   selectedCases.value = parseCases(record.judgeCase)
   caseModalVisible.value = true
 }
+
+
+// 页面切换
+const onPageChange = (page: number)=>{
+  searchParams.value = {
+    ...searchParams.value,
+    current: page
+  }
+  // 同步更新分页组件的当前页（关键修正）
+  paginationConfig.value.current = page;
+}
+
+watch(
+  () => searchParams.value, // 监听searchParams的变化
+  () => {
+    loadData(); // 只有当搜索参数变化时才重新加载数据
+  },
+  { immediate: false } // 初始化时立即执行一次（等效于onMounted中的loadData）
+);
 </script>
 
 <style scoped>
