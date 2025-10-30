@@ -52,7 +52,7 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 import message from "@arco-design/web-vue/es/message";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { UserLoginRequest } from "@/api/models/UserLoginRequest";
 import { UserControllerService } from "@/api/services/UserControllerService";
@@ -65,6 +65,9 @@ const form = reactive({
 
 const router = useRouter();
 const store = useStore();
+
+// 获取路由实例
+const route = useRoute();
 
 const handleSubmit = async () => {
   if (!form.userAccount) {
@@ -81,7 +84,7 @@ const handleSubmit = async () => {
     if (res.code === 0) {
       const data = res.data as UserVO;
       store.commit("user/updateUser", data); 
-      router.push({ path: "/", replace: true });
+      router.push({ path: route.query.redirect as string || "/", replace: true });
     } else {
       message.error("登录失败：" + res.message);
     }

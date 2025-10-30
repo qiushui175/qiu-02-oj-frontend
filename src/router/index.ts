@@ -10,6 +10,7 @@ import AddQuestionView from "@/views/question/AddQuestionView.vue";
 import ManageQuestionView from "@/views/question/ManageQuestionView.vue";
 import EditQuestionView from "@/views/question/EditQuestionView.vue";
 import ListQuestionView from "@/views/question/ListQuestionView.vue";
+import SolveQuestionView from "@/views/question/SolveQuestionView.vue";
 
 // 扩展 RouteMeta 接口以包含我们的自定义属性
 declare module 'vue-router' {
@@ -79,6 +80,17 @@ const routes: Array<RouteRecordRaw> = [
     component: EditQuestionView,
     meta: {
       title: '题目编辑页面',
+      access: ACCESS_ENUM.USER
+    },
+  },
+
+  {
+    path: "/question/solve/:id",
+    name: "solveQuestion",
+    component: SolveQuestionView,
+    meta: {
+      title: '做题页面',
+      access: ACCESS_ENUM.USER
     },
   },
 

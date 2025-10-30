@@ -1,14 +1,14 @@
 // initial state
-import { UserControllerService } from "@/api";
-import { StoreOptions } from "vuex";
+import { UserControllerService } from '@/api'
+import { StoreOptions } from 'vuex'
 
 export default {
   namespaced: true,
   state: () => ({
     loginUser: {
       id: null,
-      userName: "未登录",
-    },
+      userName: '未登录'
+    }
   }),
   getters: {
     /**
@@ -17,24 +17,24 @@ export default {
      * - 未登录：id 为空或 null
      */
     isLogin: (state) => {
-      return !!state.loginUser && !!state.loginUser.id;
-    },
+      return !!state.loginUser && !!state.loginUser.id
+    }
   },
   actions: {
     async getLoginUser({ commit }) {
       // TODO 从远程去获取登录信息
-      const res = await UserControllerService.getLoginUserUsingGet(); 
+      const res = await UserControllerService.getLoginUserUsingGet()
       if (res.code === 0 && res.data) {
-        commit("updateUser", res.data); // 接口成功且有数据，更新用户状态
+        commit('updateUser', res.data) // 接口成功且有数据，更新用户状态
       } else {
         // 接口返回失败（如未登录），重置为未登录状态
-        commit("resetUser");
+        commit('resetUser')
       }
-    },
+    }
   },
   mutations: {
     updateUser(state, payload) {
-      state.loginUser = payload;
+      state.loginUser = payload
     },
     /**
      * 登出或重置为未登录状态
@@ -42,9 +42,18 @@ export default {
     resetUser(state) {
       state.loginUser = {
         id: null,
-        userName: "未登录",
-        userRole: "guest",
-      };
+        userName: '未登录'
+      }
     },
-  },
-} as StoreOptions<any>;
+
+    async logout(state) {
+      const res = await UserControllerService.userLogoutUsingPost() // 调用登出接口
+      if (res.code === 0) {
+        state.loginUser = {
+          id: null,
+          userName: '未登录'
+        }
+      }
+    }
+  }
+} as StoreOptions<any>

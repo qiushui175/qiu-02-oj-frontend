@@ -186,7 +186,7 @@ const handleLogout = async () => {
     // await UserControllerService.logout();
 
     // 2. 重置用户状态
-    store.commit('user/resetUser')
+    store.commit('user/logout')
 
     // 3. 清除Token（如有）
     localStorage.removeItem('token')

@@ -99,7 +99,7 @@ const doSolve = (id: number) => {
 
 const loadData = async () => {
   try {
-    const res = await QuestionControllerService.listMyQuestionVoByPageUsingPost(
+    const res = await QuestionControllerService.listQuestionVoByPageUsingPost(
       searchParams.value
     )
     if (res.code === 0) {
