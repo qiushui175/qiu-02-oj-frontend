@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onBeforeUnmount, watch, defineProps } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch, defineProps, toRaw } from 'vue'
 import * as monaco from 'monaco-editor'
 import loader from '@monaco-editor/loader'
 
@@ -35,7 +35,7 @@ onMounted(async () => {
 
   editorInstance = monacoInstance.editor.create(editorContainer.value!, {
     value: props.modelValue || '',
-    language: props.language || 'javascript',
+    language: props.language || 'java',
     theme: props.theme || 'vs-light',
     automaticLayout: true,
     readOnly: props.readOnly || false,
@@ -68,7 +68,7 @@ watch(
       const model = editorInstance.getModel()
       if (model) {
         // 使用初始化后的 monacoInstance 调用 API
-        monacoInstance.editor.setModelLanguage(model, newLanguage)
+        monacoInstance.editor.setModelLanguage(toRaw(model), newLanguage)
         editorInstance.layout(); // 刷新布局
       }
     }

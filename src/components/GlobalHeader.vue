@@ -54,7 +54,7 @@
         >
           <!-- 触发元素：用户名（必须用 a-dropdown-item 或直接嵌套元素） -->
           <span class="username-trigger" style="cursor: pointer">
-            {{ store.state.user?.loginUser?.userName }}
+            {{ loginUser.userName }}
           </span>
 
           <!-- 下拉菜单内容 -->
@@ -174,7 +174,6 @@ const handleLoginOrRegister = () => {
 // 其他已有代码不变，添加下拉菜单选择事件
 const handleDropdownSelect = (key: string) => {
   if (key === 'logout') {
-    console.log('logout')
     handleLogout() // 调用退出登录逻辑
   }
 }

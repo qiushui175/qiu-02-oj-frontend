@@ -11,6 +11,7 @@ import ManageQuestionView from "@/views/question/ManageQuestionView.vue";
 import EditQuestionView from "@/views/question/EditQuestionView.vue";
 import ListQuestionView from "@/views/question/ListQuestionView.vue";
 import SolveQuestionView from "@/views/question/SolveQuestionView.vue";
+import SubmitInfoQuestionView from "@/views/question/SubmitInfoQuestionView.vue";
 
 // 扩展 RouteMeta 接口以包含我们的自定义属性
 declare module 'vue-router' {
@@ -71,6 +72,17 @@ const routes: Array<RouteRecordRaw> = [
       isMenu: true,
       title: '题目添加页面',
       access: ACCESS_ENUM.ADMIN
+    },
+  },
+
+  {
+    path: "/question/submit",
+    name: "subminInfoQuestion",
+    component: SubmitInfoQuestionView,
+    meta: {
+      isMenu: true,
+      title: '题目提交页面',
+      access: ACCESS_ENUM.USER
     },
   },
 

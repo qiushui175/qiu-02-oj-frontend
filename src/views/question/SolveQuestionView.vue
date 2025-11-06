@@ -70,7 +70,6 @@
                 <a-option>java</a-option>
                 <a-option>cpp</a-option>
                 <a-option>go</a-option>
-                <a-option>html</a-option>
               </a-select>
             </a-form-item>
           </a-form>
@@ -91,10 +90,11 @@ import MdViewer from '@/components/MdViewer.vue'
 import { Message } from '@arco-design/web-vue'
 import { languages } from 'monaco-editor/esm/metadata'
 import { onMounted, reactive, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 // 获取当前路由对象
 const route = useRoute()
+const vueRouter = useRouter()
 
 // 拿到动态参数 id
 const id = route.params.id
@@ -123,7 +123,11 @@ watch(
   }
 )
 
-const code = ref('')
+const code = ref(`public class Main{
+    public static void main(String[] args){
+        
+    }
+}`)
 
 const codeForm = reactive({
   language: 'java'
@@ -138,6 +142,7 @@ const submitAnswer = async () => {
 
   if (res.code === 0) {
     Message.success('提交成功')
+    vueRouter.push('/question/submit')
   } else {
     Message.error('提交失败')
   }
