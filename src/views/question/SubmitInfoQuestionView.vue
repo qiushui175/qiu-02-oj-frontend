@@ -2,6 +2,39 @@
   <div id="submitInfoQuestionView">
     <div class="page-header">
       <h2>题目提交信息</h2>
+      <div class="header-actions">
+        <a-form :model="searchParams" layout="inline" @submit="handleSearch">
+          <a-form-item
+            field="questionId"
+            label="题目ID"
+          >
+            <a-input
+              v-model="searchParams.questionId"
+              placeholder="输入要查找的题目ID"
+            />
+          </a-form-item>
+
+          <a-form-item
+            field="language"
+            label="编程语言"
+          >
+            <a-select
+                v-model="searchParams.language"
+                :style="{ width: '300px' }"
+                placeholder="请选择编程语言"
+                allow-clear
+              >
+                <a-option>java</a-option>
+                <a-option>cpp</a-option>
+                <a-option>go</a-option>
+              </a-select>
+          </a-form-item>
+
+          <a-form-item>
+            <a-button html-type="submit">搜索</a-button>
+          </a-form-item>
+        </a-form>
+      </div>
     </div>
 
     <div class="table-container">
@@ -46,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, watch } from 'vue'
 import { Message } from '@arco-design/web-vue'
 import { QuestionSubmitControllerService } from '@/api'
 import type { QuestionSubmitVO, QuestionSubmitQueryRequest, JudgeInfo } from '@/api'
@@ -67,8 +100,6 @@ const messageMap: Record<string, { text: string; color: string }> = {
 }
 
 
-
-
 // 获取标签文字
 const getMessageText = (msg?: string) => {
   return messageMap[msg || '']?.text || 'Unknown'
@@ -82,9 +113,9 @@ const getMessageColor = (msg?: string) => {
 const dataList = ref<QuestionSubmitVO[]>([])
 
 // ---------- 查询与分页 ----------
-const searchParams = reactive<QuestionSubmitQueryRequest>({
-  current: 1,
+const searchParams = ref<QuestionSubmitQueryRequest>({
   pageSize: 10,
+  current: 1,
   sortOrder: 'desc',
   sortField: 'createTime'
 })
@@ -124,7 +155,7 @@ const shouldShowPerformance = (record: QuestionSubmitVO): boolean => {
 // ---------- 数据加载 ----------
 const loadData = async () => {
   try {
-    const res = await QuestionSubmitControllerService.listQuestionSubmitVoByPageUsingPost(searchParams)
+    const res = await QuestionSubmitControllerService.listQuestionSubmitVoByPageUsingPost(searchParams.value)
     if (res.code === 0) {
       dataList.value = res.data.records
       paginationConfig.total = Number(res.data.total)
@@ -138,7 +169,7 @@ const loadData = async () => {
 
 // ---------- 分页 ----------
 const onPageChange = (page: number) => {
-  searchParams.current = page
+  searchParams.value.current = page
   paginationConfig.current = page
   loadData()
 }
@@ -146,6 +177,23 @@ const onPageChange = (page: number) => {
 onMounted(() => {
   loadData()
 })
+
+
+const handleSearch = () => {
+  searchParams.value = {
+    ...searchParams.value,
+    current: 1
+  }
+  // loadData()
+}
+
+watch(
+  () => searchParams.value, // 监听searchParams的变化
+  () => {
+    loadData() // 只有当搜索参数变化时才重新加载数据
+  },
+  { immediate: false } // 初始化时立即执行一次（等效于onMounted中的loadData）
+)
 </script>
 
 <style scoped>
@@ -176,5 +224,10 @@ onMounted(() => {
   border-radius: 6px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   overflow: hidden;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
 }
 </style>

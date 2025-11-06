@@ -58,7 +58,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "admin",
     component: AdminView,
     meta: {
-      isMenu: true,
+      isMenu: false,
       title: '管理员页面',
       access: ACCESS_ENUM.ADMIN
     },
